@@ -9,6 +9,9 @@ import java.net.Socket;
  * A Simple TCP client, used as a warm-up exercise for assignment A4.
  */
 public class SimpleTcpClient {
+
+    Socket socket = new Socket();
+
     // Remote host where the server will be running
     private static final String HOST = "localhost";
     // TCP port
@@ -126,7 +129,15 @@ public class SimpleTcpClient {
      * @param request The request message to send. Do NOT include the newline in the message!
      * @return True when message successfully sent, false on error.
      */
-    private boolean sendRequestToServer(String request) {
+    private boolean sendRequestToServer(String request) throws IOException
+    {
+
+        //Send HTTP request to the server
+        String commandToSend = "GET / HTTP / 1.0\r\n\r\n";
+
+        OutputStream out = socket.getOutputStream();
+        out.write(commandToSend.getBytes());
+
 
         // TODO - implement this method
         // Hint: What can go wrong? Several things:
