@@ -1,5 +1,10 @@
 package no.ntnu.datakomm;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+
 /**
  * A Simple TCP client, used as a warm-up exercise for assignment A4.
  */
@@ -93,15 +98,25 @@ public class SimpleTcpClient {
     }
 
     /**
-     * Try to establish TCP connection to the server (the three-way handshake).
+     * Try to establish TCP connection to the server (s).
      *
      * @param host The remote host to connect to. Can be domain (localhost, ntnu.no, etc), or IP address
      * @param port TCP port to use
      * @return True when connection established, false otherwise
      */
     private boolean connectToServer(String host, int port) {
-        // TODO - implement this method
-        // Remember to catch all possible exceptions that the Socket class can throw.
+        System.out.print("Client started...");
+
+        try {
+            //Establish connection to the remote server
+            Socket socket = new Socket("ntnu.no", 80);
+            System.out.print("Successfully connected");
+        }
+
+        catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
         return false;
     }
 
@@ -112,6 +127,7 @@ public class SimpleTcpClient {
      * @return True when message successfully sent, false on error.
      */
     private boolean sendRequestToServer(String request) {
+
         // TODO - implement this method
         // Hint: What can go wrong? Several things:
         // * Connection closed by remote host (server shutdown)
