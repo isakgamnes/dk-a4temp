@@ -11,9 +11,9 @@ public class SimpleTcpClient {
 
     Socket socket = new Socket();
     // Remote host where the server will be running
-    private static final String HOST = "localhost";
+    private static final String HOST = "datakomm.work";
     // TCP port
-    private static final int PORT = 1301;
+    private static final int PORT = 1300;
 
     /**
      * Run the TCP Client.
@@ -110,21 +110,23 @@ public class SimpleTcpClient {
     {
         boolean connected;
 
-        InetSocketAddress serverAddres = new InetSocketAddress(host, port);
+        InetSocketAddress serverAddress = new InetSocketAddress(host, port);
 
         try
         {
-            socket.connect(serverAddres);
+            socket.connect(serverAddress);
+            connected = true;
         }
         catch(IOException e)
         {
             System.out.println("Error: " + e.getMessage());
+            connected = false;
         }
 
 
         // TODO - implement this method
         // Remember to catch all possible exceptions that the Socket class can throw.
-        return false;
+        return connected;
     }
 
     /**
