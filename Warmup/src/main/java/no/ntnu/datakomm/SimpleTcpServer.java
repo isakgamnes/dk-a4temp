@@ -22,7 +22,8 @@ public class SimpleTcpServer {
      *
      * @param message The message to be logged (printed).
      */
-    private static void log(String message) {
+    private static void log(String message)
+    {
         System.out.println(message);
     }
 }
