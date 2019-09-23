@@ -2,6 +2,7 @@ package no.ntnu.datakomm;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
@@ -16,6 +17,7 @@ public class SimpleTcpClient {
     private static final String HOST = "localhost";
     // TCP port
     private static final int PORT = 1301;
+    private PrintWriter writer;
 
     /**
      * Run the TCP Client.
@@ -96,7 +98,15 @@ public class SimpleTcpClient {
      *
      * @return True on success, false otherwise
      */
-    private boolean closeConnection() {
+    private boolean closeConnection()
+    {
+        try
+        {
+            socket.close();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
         return false;
     }
 
