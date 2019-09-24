@@ -1,7 +1,6 @@
 package no.ntnu.datakomm;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 import java.net.InetSocketAddress;
 
@@ -196,9 +195,23 @@ public class SimpleTcpClient
      */
     private String readResponseFromServer()
     {
+        String response = null;
+        try
+        {
+            InputStream in = socket.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+            String oneResponseLine;
+
+            response = reader.readLine();
+        }
+        catch(IOException e)
+        {
+            System.out.println("Error: " + e.getMessage());
+        }
         // TODO - implement this method
         // Similarly to other methods, exception can happen while trying to read the input stream of the TCP Socket
-        return null;
+        return response;
     }
 
     /**
