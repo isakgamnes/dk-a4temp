@@ -12,9 +12,9 @@ public class SimpleTcpClient
 
     Socket socket = new Socket();
     // Remote host where the server will be running
-    private static final String HOST = "datakomm.work";
+    private static final String HOST = "127.0.0.1";
     // TCP port
-    private static final int PORT = 1300;
+    private static final int PORT = 1025;
 
     private PrintWriter writer;
 
@@ -200,8 +200,6 @@ public class SimpleTcpClient
         {
             InputStream in = socket.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-
-            String oneResponseLine;
 
             response = reader.readLine();
         }
