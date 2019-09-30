@@ -37,19 +37,8 @@ public class SimpleTcpServer {
             {
                 Socket clientSocket = welcomingSocket.accept();
 
-                InputStreamReader reader = new InputStreamReader(clientSocket.getInputStream());
-                BufferedReader bufReader = new BufferedReader(reader);
-
-                String clientInput = bufReader.readLine();
-
-                System.out.println("Client sent " + clientInput);
-
-                String response = clientInput + " was received from the client.";
-
-                PrintWriter writer = new PrintWriter(clientSocket.getOutputStream());
-                writer.println(response);
-
-                clientSocket.close();
+                ClientHandler clientHandler = new ClientHandler(clientSocket);
+                clientHandler.start();
             }
 
 
