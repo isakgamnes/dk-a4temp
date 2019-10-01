@@ -1,8 +1,6 @@
 package no.ntnu.datakomm;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
@@ -11,14 +9,14 @@ import java.net.Socket;
  */
 public class SimpleTcpClient {
 
-    Socket socket = new Socket();
-
     // Remote host where the server will be running
-    private static final String HOST = "localhost";
+    private static final String HOST = "datakomm.work";
     // TCP port
     private static final int PORT = 1301;
+    private Socket socket;
     private PrintWriter writer;
-
+    private InputStream in;
+    private BufferedReader reader;
     /**
      * Run the TCP Client.
      *
@@ -100,14 +98,16 @@ public class SimpleTcpClient {
      */
     private boolean closeConnection()
     {
+        boolean closeConnection = false;
         try
         {
             socket.close();
+            closeConnection = true;
         } catch (IOException e)
         {
             e.printStackTrace();
         }
-        return false;
+        return closeConnection
     }
 
     /**
@@ -118,19 +118,25 @@ public class SimpleTcpClient {
      * @return True when connection established, false otherwise
      */
     private boolean connectToServer(String host, int port) {
-        System.out.print("Client started...");
 
-        try {
+            boolean connected = false;
             //Establish connection to the remote server
-            Socket socket = new Socket("ntnu.no", 80);
-            System.out.print("Successfully connected");
-        }
+            try
+            {
+                socket = new Socket(HOST, PORT);
+                OutputStream out = socket.getOutputStream();
+                writer = new PrintWriter(out, true);
+                System.out.print("Successfully connected");
+                in = socket.getInputStream();
+                reader = new BufferedReader(new InputStreamReader(in));
+                connected = true;
 
-        catch (IOException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
+            } catch (IOException e)
+            {
+                e.printStackTrace();
+            }
 
-        return false;
+        return connected;
     }
 
     /**
@@ -139,23 +145,22 @@ public class SimpleTcpClient {
      * @param request The request message to send. Do NOT include the newline in the message!
      * @return True when message successfully sent, false on error.
      */
-    private boolean sendRequestToServer(String request) throws IOException
+    private boolean sendRequestToServer(String request)
     {
+        boolean requestSent = false;
 
-        //Send HTTP request to the server
-        String commandToSend = "GET / HTTP / 1.0\r\n\r\n";
-
-        OutputStream out = socket.getOutputStream();
-        out.write(commandToSend.getBytes());
+            writer.println(request);
+            requestSent = true;
 
 
-        // TODO - implement this method
+
+
         // Hint: What can go wrong? Several things:
         // * Connection closed by remote host (server shutdown)
         // * Internet connection lost, timeout in transmission
         // * Connection not opened.
         // * What is the request is null or empty?
-        return false;
+        return requestSent;
     }
 
     /**
@@ -164,11 +169,28 @@ public class SimpleTcpClient {
      * @return The response received from the server, null on error. The newline character is stripped away
      * (not included in the returned value).
      */
-    private String readResponseFromServer() {
-        // TODO - implement this method
-        // Similarly to other methods, exception can happen while trying to read the input stream of the TCP Socket
+    private String readResponseFromServer()
+    {
+        try
+        {
+            String oneResponseLine;
+
+                oneResponseLine = reader.readLine();
+                if (oneResponseLine != null)
+                {
+                    System.out.print(oneResponseLine);
+                }
+
+            return oneResponseLine;
+
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
         return null;
     }
+        // Similarly to other methods, exception can happen while trying to read the input stream of the TCP Socket
+
 
     /**
      * Log a message to the system console.
