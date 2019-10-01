@@ -55,7 +55,9 @@ public class SimpleTcpClient {
                     int secondsToSleep = 2 + (int)(Math.random() * 5);
                     log("Sleeping " + secondsToSleep + " seconds to allow simulate long client-server connection...");
                     Thread.sleep(secondsToSleep * 1000);
-                    request = "bla+bla";
+                    int c = (int) (1 + Math.random() * 10);
+                    int d = (int) (1 + Math.random() * 10);
+                    request = c + "+" + d;
                     if (sendRequestToServer(request)) {
                         log("Sent " + request + " to server");
                         response = readResponseFromServer();
@@ -102,12 +104,13 @@ public class SimpleTcpClient {
         try
         {
             socket.close();
+            socket = null;
             closeConnection = true;
         } catch (IOException e)
         {
             e.printStackTrace();
         }
-        return closeConnection
+        return closeConnection;
     }
 
     /**
@@ -151,8 +154,11 @@ public class SimpleTcpClient {
 
             writer.println(request);
             requestSent = true;
-
-
+            if (socket == null)
+        {
+            requestSent = false;
+        }
+        return requestSent;
 
 
         // Hint: What can go wrong? Several things:
@@ -160,7 +166,7 @@ public class SimpleTcpClient {
         // * Internet connection lost, timeout in transmission
         // * Connection not opened.
         // * What is the request is null or empty?
-        return requestSent;
+
     }
 
     /**
@@ -171,9 +177,10 @@ public class SimpleTcpClient {
      */
     private String readResponseFromServer()
     {
+        String oneResponseLine = null;
         try
         {
-            String oneResponseLine;
+
 
                 oneResponseLine = reader.readLine();
                 if (oneResponseLine != null)
@@ -181,13 +188,13 @@ public class SimpleTcpClient {
                     System.out.print(oneResponseLine);
                 }
 
-            return oneResponseLine;
+
 
         } catch (IOException e)
         {
             e.printStackTrace();
         }
-        return null;
+        return oneResponseLine;
     }
         // Similarly to other methods, exception can happen while trying to read the input stream of the TCP Socket
 
